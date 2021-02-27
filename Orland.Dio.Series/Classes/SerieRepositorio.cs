@@ -32,7 +32,7 @@ namespace Orland.Dio.Series
 
         public Serie ObterPorId(int id)
         {
-            return ListaDeSeries[id]
+            return ListaDeSeries[id];
         }
 
         public int ObterProximoId()
