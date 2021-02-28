@@ -62,55 +62,9 @@ namespace Orland.Dio.Series
         {
             var titulo = InicializarCampoString(nameof(Serie.Titulo));
             var descricao = InicializarCampoString(nameof(Serie.Descricao));
+            var ano = InicializaCampoNaoString<int>(nameof(Serie.Ano), int.TryParse);
+            var genero = InicializarGenero();
 
-            Console.Clear();
-
-            bool entradaValida = false;
-            short genero = 0;
-            while (!entradaValida)
-            {
-                var arrayDeGeneros = Enum.GetValues(typeof(Genero));
-
-                Console.WriteLine("Digite o gênero dentre as seguintes opções:");
-                foreach (short i in arrayDeGeneros)
-                {
-                    Console.WriteLine($"{i} - {Enum.GetName(typeof(Genero), i)}");
-                }
-                string entradaGenero = Console.ReadLine();
-
-                if (short.TryParse(entradaGenero, out genero) && genero <= arrayDeGeneros.Length)
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine($"{nameof(Serie.Genero)} inválidoo!");
-                    Console.WriteLine();
-                }
-
-            }
-            
-            Console.Clear();
-
-            entradaValida = false;
-            int ano = 0;
-
-            while (!entradaValida)
-            {
-                Console.WriteLine("Digite o ano de lançamento:");
-                string entradaAno = Console.ReadLine();
-
-
-                if (int.TryParse(entradaAno, out ano))
-                {
-                    entradaValida = true;
-                }
-                else
-                {
-                    Console.WriteLine($"{nameof(Serie.Ano)} inválido");
-                    Console.WriteLine();
-                }
-            }
 
             Repositorio.Inserir(new Serie(Repositorio.ObterProximoId(), (Genero)genero, titulo, descricao, ano));
         }
@@ -122,12 +76,90 @@ namespace Orland.Dio.Series
         /// <returns>Retorna o valor informado pelo usuário.</returns>
         private static string InicializarCampoString(string campo)
         {
-            Console.Clear();
-            Console.WriteLine("--Cadastro de Série--");
-            Console.WriteLine();
+            EscreverCabecalhoCadastro();
 
             Console.WriteLine($"{campo} da série:");
             return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Escreve o cabeçalho da tela de cadastro.
+        /// </summary>
+        private static void EscreverCabecalhoCadastro()
+        {
+            Console.Clear();
+            Console.WriteLine("--Cadastro de Série--");
+            Console.WriteLine();
+        }
+
+        public delegate bool TryParse<T>(string entrada, out T valor);
+
+        private static T InicializaCampoNaoString<T>(string campo, TryParse<T> funcao)
+        {
+            bool entradaValida = false;
+            T valor = default;
+
+            while (!entradaValida)
+            {
+
+                EscreverCabecalhoCadastro();
+
+                Console.WriteLine($"{campo} da Série");
+                string entradaAno = Console.ReadLine();
+
+
+                if (funcao(entradaAno, out valor))
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{nameof(Serie.Ano)} inválido");
+                    Console.ReadLine();
+                }
+            }
+
+            return valor;
+        }
+
+        private static short InicializarGenero()
+        {
+            bool entradaValida = false;
+            short genero = 0;
+            while (!entradaValida)
+            {
+                EscreverCabecalhoCadastro();
+
+                var arrayDeGeneros = Enum.GetValues(typeof(Genero));
+
+                Console.WriteLine("Digite o gênero dentre as seguintes opções:");
+                foreach (short i in arrayDeGeneros)
+                {
+                    Console.WriteLine($"{i} - {Enum.GetName(typeof(Genero), i)}");
+                }
+                string entradaGenero = Console.ReadLine();
+
+                if (short.TryParse(entradaGenero, out genero))
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{nameof(Serie.Genero)} inválidoo!");
+                    Console.ReadLine();
+                }
+
+            }
+
+            Console.Clear();
+
+
+            if (!Enum.IsDefined(typeof(Genero), genero))
+            {
+                genero = 0;
+            }
+
+            return genero;
         }
 
         /// <summary>

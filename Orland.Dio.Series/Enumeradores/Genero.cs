@@ -6,9 +6,9 @@
     public enum Genero : short
     {
         /// <summary>
-        /// Ação.
+        /// Gênero não definido.
         /// </summary>
-        Acao = 0,
+        Indefinido = 0,
         /// <summary>
         /// Aventura.
         /// </summary>
@@ -56,6 +56,10 @@
         /// <summary>
         /// Terror
         /// </summary>
-        Terror = 12
+        Terror = 12,
+        /// <summary>
+        /// Ação.
+        /// </summary>
+        Acao = 13
     }
 }   
