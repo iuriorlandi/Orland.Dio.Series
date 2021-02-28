@@ -8,7 +8,7 @@ namespace Orland.Dio.Series
     /// </summary>
     public class SerieRepositorio : IRepositorio<Serie>
     {
-        private List<Serie> ListaDeSeries { get; set; }
+        private List<Serie> ListaDeSeries { get; set; } = new List<Serie>();
 
         public void Atualizar(int id, Serie entidade)
         {

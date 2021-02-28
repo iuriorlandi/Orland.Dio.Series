@@ -49,6 +49,9 @@ namespace Orland.Dio.Series
 
         public override string ToString()
         {
+            if (Excluido)
+                return "...";
+
             return $"{Titulo} - {Ano}{Environment.NewLine}" +
                    $"{Genero} - {Descricao}";
         }

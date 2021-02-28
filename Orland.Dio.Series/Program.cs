@@ -4,6 +4,8 @@ namespace Orland.Dio.Series
 {
     class Program
     {
+        static IRepositorio<Serie> Repositorio = new SerieRepositorio();
+
         static void Main(string[] args)
         {
             var sair = false;
@@ -17,16 +19,16 @@ namespace Orland.Dio.Series
                         ListarSeries();
                         break;
                     case 2:
-                        VisualizarSerie();
+                        //VisualizarSerie();
                         break;
                     case 3:
                         CadastrarSerie();
                         break;
                     case 4:
-                        ExcluirSerie();
+                        //ExcluirSerie();
                         break;
                     case 5:
-                        EditarSerie();
+                        //EditarSerie();
                         break;
                     case 6:
                         sair = true;
@@ -58,7 +60,74 @@ namespace Orland.Dio.Series
         /// </summary>
         private static void CadastrarSerie()
         {
-            throw new NotImplementedException();
+            var titulo = InicializarCampoString(nameof(Serie.Titulo));
+            var descricao = InicializarCampoString(nameof(Serie.Descricao));
+
+            Console.Clear();
+
+            bool entradaValida = false;
+            short genero = 0;
+            while (!entradaValida)
+            {
+                var arrayDeGeneros = Enum.GetValues(typeof(Genero));
+
+                Console.WriteLine("Digite o gênero dentre as seguintes opções:");
+                foreach (short i in arrayDeGeneros)
+                {
+                    Console.WriteLine($"{i} - {Enum.GetName(typeof(Genero), i)}");
+                }
+                string entradaGenero = Console.ReadLine();
+
+                if (short.TryParse(entradaGenero, out genero) && genero <= arrayDeGeneros.Length)
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{nameof(Serie.Genero)} inválidoo!");
+                    Console.WriteLine();
+                }
+
+            }
+            
+            Console.Clear();
+
+            entradaValida = false;
+            int ano = 0;
+
+            while (!entradaValida)
+            {
+                Console.WriteLine("Digite o ano de lançamento:");
+                string entradaAno = Console.ReadLine();
+
+
+                if (int.TryParse(entradaAno, out ano))
+                {
+                    entradaValida = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{nameof(Serie.Ano)} inválido");
+                    Console.WriteLine();
+                }
+            }
+
+            Repositorio.Inserir(new Serie(Repositorio.ObterProximoId(), (Genero)genero, titulo, descricao, ano));
+        }
+
+        /// <summary>
+        /// Obtém uma entrada do usuário para um campo string.
+        /// </summary>
+        /// <param name="campo">Nome do campo a ser obtido.</param>
+        /// <returns>Retorna o valor informado pelo usuário.</returns>
+        private static string InicializarCampoString(string campo)
+        {
+            Console.Clear();
+            Console.WriteLine("--Cadastro de Série--");
+            Console.WriteLine();
+
+            Console.WriteLine($"{campo} da série:");
+            return Console.ReadLine();
         }
 
         /// <summary>
@@ -74,7 +143,17 @@ namespace Orland.Dio.Series
         /// </summary>
         private static void ListarSeries()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+
+            var lista = Repositorio.Listar();
+
+            foreach (var serie in lista)
+            {
+                Console.WriteLine($"{serie.Id} {Environment.NewLine}{serie.ToString()}");
+                Console.WriteLine();
+            }
+
+            Console.ReadLine();
         }
 
         /// <summary>
